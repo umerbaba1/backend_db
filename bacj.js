@@ -31,7 +31,18 @@ app.post("/signup", async function (req, res) {
     
   const userSchema = z.object({
     email: z.string().min(5).max(30).email(),
-    password: z.string().min(3).max(100),
+    password: z.string().min(3).max(100).refine(
+        (val) => /[A-Z]/.test(val),
+        "Password must contain at least one uppercase letter."
+      )
+      .refine(
+        (val) => /\d/.test(val),
+        "Password must contain at least one number."
+      )
+      .refine(
+        (val) => /[@$!%*?&]/.test(val),
+        "Password must contain at least one special character."
+      ),
     username: z.string().min(7).max(100),
   });
 
